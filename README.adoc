@@ -48,6 +48,7 @@ The service responds to `GET` requests to the `/System/properties` path. The `GE
 return a `200 OK` response that contains all of the JVM's system properties.
 
 include::{common-includes}/gitclone.adoc[]
+
 == Prerequisites
 
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
