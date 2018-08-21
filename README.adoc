@@ -54,7 +54,10 @@ include::{common-includes}/gitclone.adoc[]
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
 For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/
 This guide will also be using a sample database from this site: https://github.com/datacharmer/test_db
+
 **NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard to connect to the mysql database.
+
+
 
 == Creating a JAX-RS application
 
