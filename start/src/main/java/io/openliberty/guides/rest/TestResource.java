@@ -20,7 +20,7 @@ import java.sql.Statement;
 
 @Path("test")
 public class TestResource {
-static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";
+static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC&useSSL=false";
     static final String USER = "timothyyao";//username 
     static final String PASS = "1qa2ws#ED";//password
     @GET
@@ -32,22 +32,20 @@ static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=t
         String query = "select * from employees limit 10";
         JsonArrayBuilder array = Json.createArrayBuilder();
 		try{
-			//STEP 2: Register JDBC driver
-			//            Class.forName("com.mysql.jdbc.Driver");
-
-			//STEP 3: Open a connection
+			//Open a connection
 			System.out.println("Connecting to a selected database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			System.out.println("Connected database successfully...");
 
-			//STEP 4: Execute a query
+			//Execute a query
 			System.out.println("Creating statement...");
 			stmt = conn.createStatement();
 			System.out.println("Executing statement.");
 			ResultSet rs = stmt.executeQuery(query);
-			//STEP 5: Extract data from result set
-			
+			//Extract data from result set
+			System.out.println("Execution suceeeded");	
 			while(rs.next()){
+				//Make a new JsonObject within
 				JsonObjectBuilder obj = Json.createObjectBuilder();
 				String emp_no = rs.getString("emp_no");
 				String first_name = rs.getString("first_name");

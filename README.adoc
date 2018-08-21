@@ -29,18 +29,14 @@ the JVM's system properties. The REST service will respond to GET requests made 
 
 [source,role="no_copy"]
 ----
-http://localhost:9080/JDBC/api/test
+http://localhost:9080/Liberty/api/test
 ----
 
-The service responds to a `GET` request with a JSON representation of the system properties, where
-each property is a field in a JSON object like this:
+The service responds to a `GET` request which will return a JSON array back to you. An example of this is
 
 [source,json,role="no_copy"]
 ----
-{
-  "os.name":"Mac",
-  "java.version": "1.8"
-}
+[{"first_name":"Georgi","last_name":"Facello"},{"first_name":"Bezalel","last_name":"Simmel"},{"first_name":"Parto","last_name":"Bamford"},{"first_name":"Chirstian","last_name":"Koblick"},{"first_name":"Kyoichi","last_name":"Maliniak"},{"first_name":"Anneke","last_name":"Preusig"},{"first_name":"Tzvetan","last_name":"Zielinski"},{"first_name":"Saniya","last_name":"Kalloufi"},{"first_name":"Sumant","last_name":"Peac"},{"first_name":"Duangkaew","last_name":"Piveteau"}]
 ----
 
 When you create a new REST application the design of the API is important. The JAX-RS APIs could be
@@ -52,7 +48,9 @@ The service responds to `GET` requests to the `/System/properties` path. The `GE
 return a `200 OK` response that contains all of the JVM's system properties.
 
 include::{common-includes}/gitclone.adoc[]
+== Prerequisites
 
+This guide will be unique as it will require some installation and/or prior knowledge. The mySQL code in this will be unique to your username and your pass.
 == Creating a JAX-RS application
 
 JAX-RS has two key concepts for creating REST APIs. The most obvious is the resource itself, which is
