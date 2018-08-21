@@ -9,7 +9,7 @@
 :projectid: rest-jdbc
 :page-layout: guide
 :page-duration: 30 minutes
-:page-releasedate: 2017-09-19
+:page-releasedate: 2018-09-19
 :page-description: Learn how to create a REST service with JAX-RS, JSON-P, mySQL, and Open Liberty.
 :page-tags: ['REST', 'MicroProfile', 'microservices']
 :page-related-guides: ['rest-client-java', 'rest-client-angularjs']
@@ -20,7 +20,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to create a JDBC service with JAX-RS, JSON-P, and Open Liberty.
+Learn how to create a service with JAX-RS, JSON-P, mySQL, and Open Liberty.
 
 == What you'll learn
 
@@ -50,7 +50,11 @@ return a `200 OK` response that contains all of the JVM's system properties.
 include::{common-includes}/gitclone.adoc[]
 == Prerequisites
 
-This guide will be unique as it will require some installation and/or prior knowledge. The mySQL code in this will be unique to your username and your pass.
+This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
+For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/
+This guide will also be using a sample database from this site: https://github.com/datacharmer/test_db
+**NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard to connect to the mysql database.
+
 == Creating a JAX-RS application
 
 JAX-RS has two key concepts for creating REST APIs. The most obvious is the resource itself, which is
