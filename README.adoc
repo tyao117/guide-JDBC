@@ -53,11 +53,18 @@ include::{common-includes}/gitclone.adoc[]
 
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
 For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/
-This guide will also be using a sample database from this site: https://github.com/datacharmer/test_db
 
-**NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard to connect to the mysql database.
+**NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard making new users for the mysql database.
 
+For now, the database that will be used is the employee. The employee database can be installed here: https://github.com/datacharmer/test_db. Download the repo, and run the command 
+----
+git clone https://github.com/datacharmer/test_db
+----
 
+After the command, the database needs to be populated. 
+----
+
+----
 
 == Creating a JAX-RS application
 
@@ -83,10 +90,10 @@ In this application, a resource might be a system property, or a set of system p
 to have a single class handle multiple different resources, but keeping a clean separation between types
 of resources helps with maintainability in the long run.
 
-Create the JAX-RS resource class in the `src/main/java/io/openliberty/guides/rest/PropertiesResource.java` file:
+Create the JAX-RS resource class in the `src/main/java/io/openliberty/guides/rest/TestResource.java` file:
 [source,java]
 ----
-include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=**;!comment]
+include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=**;!comment]
 ----
 
 This resource class has quite a bit of code in it, so let's break it down into manageable chunks.

@@ -21,8 +21,8 @@ import java.sql.Statement;
 @Path("test")
 public class TestResource {
 static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC&useSSL=false";
-    static final String USER = "timothyyao";//username 
-    static final String PASS = "1qa2ws#ED";//password
+    static final String USER = "mytestuser";//username 
+    static final String PASS = "mypassword";//password
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 	public JsonArray getProperties() {
