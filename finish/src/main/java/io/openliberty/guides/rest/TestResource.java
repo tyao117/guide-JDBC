@@ -26,7 +26,7 @@ static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=t
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 	public JsonArray getProperties() {
-		        Statement stmt = null;
+		Statement stmt = null;
         Connection conn = null;
         
         String query = "select * from employees limit 10";
@@ -57,22 +57,27 @@ static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=t
 			rs.close();
 		 } catch(SQLException se){
             //Handle errors for JDBC
-            se.printStackTrace();
+			se.printStackTrace();
+			JsonObjectBuilder obj = Json.createObjectBuilder();
+			obj.add("SQL error", se.toString());
          } catch(Exception e){
             //Handle errors for Class.forName
-            e.printStackTrace();
+			e.printStackTrace();
+			JsonObjectBuidler obj = Json.createObjectBuilder();
+			obj.add("Error", se.toString());
          } finally{
             //finally block used to close resources
             try{
                if(stmt!=null)
-                  conn.close();
-            } catch(SQLException se){
-            }// do nothing
+                  	conn.close();
+            } catch(SQLException se){ }// do nothing
             try{
                if(conn!=null)
-                  conn.close();
+                	conn.close();
             }catch(SQLException se){
-               se.printStackTrace();
+			   	se.printStackTrace();
+			   	JsonObjectBuilder obj = Json.createObjectBuilder();
+				obj.add("SQL error", se.toString());
             	}//end finally try
          	} //end finally
 		return array.build();

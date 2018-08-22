@@ -12,7 +12,7 @@
 :page-releasedate: 2018-09-19
 :page-description: Learn how to create a REST service with JAX-RS, JSON-P, mySQL, and Open Liberty.
 :page-tags: ['REST', 'MicroProfile', 'microservices']
-:page-related-guides: ['rest-client-java', 'rest-client-angularjs']
+:page-related-guides: ['rest-intro','rest-client-java', 'rest-client-angularjs']
 :page-permalink: /guides/{projectid}
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
 = Creating a RESTful web service with JDBC
@@ -54,16 +54,28 @@ include::{common-includes}/gitclone.adoc[]
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
 For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/
 
+Go through the mySQL setup for the server. 
 **NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard making new users for the mysql database.
 
-For now, the database that will be used is the employee. The employee database can be installed here: https://github.com/datacharmer/test_db. Download the repo, and run the command 
+Now, we are going to make a new testuser and a new password for this instance. 
+Sign on as root:
 ----
-git clone https://github.com/datacharmer/test_db
+myuser@mycomputer:~$ mysql -u root -p
+----
+The -u tells mysql that you want to use the user root and the -p flag means that the password will provided in the next prompt.
+
+Now the testuser needs to be installed into the mysql server:
+----
+mysql> CREATE USER 'mytestuser'@'localhost' IDENTIFIED BY 'mypassword';
+mysql> GRANT ALL PRIVILEGES ON * . * TO 'mytestuser'@'localhost';
+mysql> EXIT
 ----
 
-After the command, the database needs to be populated. 
+For now, the database that will be used is the employee. The employee database can be installed here: https://github.com/datacharmer/test_db. Download the repo, and import the db data into the mysql database. 
 ----
-
+myuser@mycomputer:~$ git clone https://github.com/datacharmer/test_db
+myuser@mycomputer:~$ cd test_db
+myuser@mycomputer:~$ mysql -u mytestuser -p < employees.sql
 ----
 
 == Creating a JAX-RS application
@@ -83,14 +95,14 @@ resource classes in the WAR file with this JAX-RS application, making them avail
 path specified in the `SystemApplication` class. The `@ApplicationPath` annotation has a
 value that indicates the path within the WAR that the JAX-RS application accepts requests from.
 
-== Creating the JAX-RS resource
+== Creating the JDBC resource
 
 In JAX-RS, a single class should represent a single resource, or a group of resources of the same type.
 In this application, a resource might be a system property, or a set of system properties. It is easy
 to have a single class handle multiple different resources, but keeping a clean separation between types
 of resources helps with maintainability in the long run.
 
-Create the JAX-RS resource class in the `src/main/java/io/openliberty/guides/rest/TestResource.java` file:
+Create the JDBC resource class in the `src/main/java/io/openliberty/guides/rest/TestResource.java` file:
 [source,java]
 ----
 include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=**;!comment]
@@ -100,20 +112,20 @@ This resource class has quite a bit of code in it, so let's break it down into m
 
 The `@Path` annotation on the class indicates that this resource responds to the `properties` path
 in the JAX-RS application. The `@ApplicationPath` annotation in the application class together with
-the `@Path` annotation in this class indicates that the resource is available at the `System/properties`
+the `@Path` annotation in this class indicates that the resource is available at the `api/test`
 path.
 [source,java,role="no_copy"]
 ----
-include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=class]
+include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=class]
 ----
 
 JAX-RS maps the HTTP methods on the URL to the methods on the class. The method to call is determined
 by the annotations specified on the methods. In the application you are building, an HTTP `GET` request
-to the `System/properties` path results in the system properties being returned:
+to the `api/test` path results in the system properties being returned:
 
 [source,java,indent=0,role="no_copy"]
 ----
-include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=getProperties]
+include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=getProperties]
 ----
 
 The `@GET` annotation on the method indicates that this method is to be called for the HTTP `GET`
@@ -122,58 +134,22 @@ value of the `@Produces` annotation will be specified in the HTTP `Content-Type`
 For this application, a JSON structure is to be returned. The desired `Content-Type` for a JSON
 response is `application/json` with `MediaType.APPLICATION_JSON` instead of the `String` content type. Using literal code such as `MediaType.APPLICATION_JSON` is better because in the event of a spelling error, a compile failure occurs.
 
-JAX-RS supports a number of ways to marshal JSON. The JAX-RS 2.0 specification mandates JSON-Processing
-(JSON-P) and JAX-B. Most JAX-RS implementations also support a Java POJO-to-JSON conversion, which
-allows the `Properties` object to be returned instead. Although this conversion would allow for a
-simpler implementation, it limits code portability as POJO-to-JSON conversion is non-standard. This
-gap in the specification is fixed in Java EE 8 with the inclusion of JSON-B.
+If more help is needed to understand what the Resources do, please consult the 
+https://www.openliberty.io/guides/rest-intro.html guide
 
 The method body does the following actions:
 
-. Creates a `JsonObjectBuilder` object using the `Json` class. The `JsonObjectBuilder` is then used
-to populate a `JsonObject` with values.
-. Calls the `getProperties` method on the `System` class to get a `Properties` object that contains
-all the system properties.
-. Calls the `entrySet` method on the `Properties` object to get a `Set` of all the entries.
-. Convert the `Set` to a `Stream` (new in Java SE 8) by calling the `stream` method. Streams make
-working through all the entries in a list very simple.
-. Calls the `forEach` method on the `Stream` passing in a function that will be invoked for each
-entry in the `Stream`. The function passed in will call the `add` method on the `JsonObjectBuilder`
-for every entry in the stream. The key and value for the `JsonObject` will be obtained by calling
-the `getKey` and `getValue` methods on the `Map.Entry` objects in the stream.
-. Returns the `JsonObject` by calling the `build` method on the `JsonObjectBuilder`.
+. It uses a String to determine what statement to query to database.
+. The var `conn` tries to make a connection to using the path to mysql using the credentials of the db_url, user, and pass
+. `stmt` then creates a statment to send to the database and tries to execute it
+. If there are results from the database, a JsonObject will be created and then be added to the JsonObjectArray.
+. The JsonObject is then built and returned. 
 
-== Configuring the server
-
-To get the service running, the Liberty server needs to be correctly configured.
-
-Edit the `src/main/liberty/config/server.xml` file to update the placeholder text to be:
-[source,xml]
-----
-include::finish/src/main/liberty/config/server.xml[]
-----
-The configuration does the following actions:
-
-. Configures the server to support both JAX-RS 2.0 and JSON-P 1.0. This is specified in the `featureManager` element.
-. Configures the server to pick up the HTTP port numbers from variables, which are then specified in
-the Maven `pom.xml` file. This is specified in the `httpEndpoint` element. Variables use the syntax `${variableName}`.
-. Configures the server to run the produced Web application on a context root specified in the Maven
-`pom.xml` file. This is specified in the `webApplication` element.
-
-The variables being used in the `server.xml` file are provided by the `bootstrapProperties` section
-of the Maven `pom.xml`:
-
-[source,xml,indent=0, role="no_copy"]
-----
-include::finish/pom.xml[tag=bootstrap]
-----
-
-include::{common-includes}/mvnbuild.adoc[]
 
 == Testing the service
 
 You could test this service manually by starting a server and pointing a web browser at the
-`\http://localhost:9080/LibertyProject/System/properties` URL. Automated tests are a much better
+`\http://localhost:9080/Liberty/rest/test` URL. Automated tests are a much better
 approach because they will trigger a failure if a change introduces a bug. JUnit and the JAX-RS Client
 API provide a very simple environment to test the application.
 
