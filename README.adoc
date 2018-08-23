@@ -20,7 +20,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to create a service with JAX-RS, JSON-P, mySQL, and Open Liberty.
+Learn how to create a service with mySQL, and Open Liberty.
 
 == What you'll learn
 
@@ -97,11 +97,6 @@ value that indicates the path within the WAR that the JAX-RS application accepts
 
 == Creating the JDBC resource
 
-In JAX-RS, a single class should represent a single resource, or a group of resources of the same type.
-In this application, a resource might be a system property, or a set of system properties. It is easy
-to have a single class handle multiple different resources, but keeping a clean separation between types
-of resources helps with maintainability in the long run.
-
 Create the JDBC resource class in the `src/main/java/io/openliberty/guides/rest/TestResource.java` file:
 [source,java]
 ----
@@ -144,6 +139,7 @@ The method body does the following actions:
 . `stmt` then creates a statment to send to the database and tries to execute it
 . If there are results from the database, a JsonObject will be created and then be added to the JsonObjectArray.
 . The JsonObject is then built and returned. 
+. If any part of the statment did not work, then it will go to the Exception and put it on the JsonArray
 
 
 == Testing the service
