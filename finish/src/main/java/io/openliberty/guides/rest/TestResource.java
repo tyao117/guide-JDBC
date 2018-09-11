@@ -63,8 +63,8 @@ static final String DB_URL = "jdbc:mysql://localhost:3306/employees?useUnicode=t
          } catch(Exception e){
             //Handle errors for Class.forName
 			e.printStackTrace();
-			JsonObjectBuidler obj = Json.createObjectBuilder();
-			obj.add("Error", se.toString());
+			JsonObjectBuilder obj = Json.createObjectBuilder();
+			obj.add("Error", e.toString());
          } finally{
             //finally block used to close resources
             try{
