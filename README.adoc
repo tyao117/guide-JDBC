@@ -115,12 +115,9 @@ OS name: "mac os x", version: "10.13.6", arch: "x86_64", family: "mac"
 
 == Creating a JAX-RS application
 
-JAX-RS has two key concepts for creating REST APIs. The most obvious is the resource itself, which is
-modelled as a class. The second is a JAX-RS application, which groups all exposed resources under a
-common path. You can think of the JAX-RS application as a wrapper for all your resources. Having a
-single JAX-RS application is common, although multiple are possible.
+**Note** Everything is based on the `start/` directory of the folder: `guide-JDBC/start`
 
-Create the JAX-RS application class in the `src/main/java/io/openliberty/guides/rest/SystemApplication.java` file:
+Create the JAX-RS application class in `src/main/java/io/openliberty/guides/rest/SystemApplication.java` file and write this into it:
 [source,java]
 ----
 include::finish/src/main/java/io/openliberty/guides/rest/SystemApplication.java[tags=**;!comment]
@@ -132,7 +129,7 @@ value that indicates the path within the WAR that the JAX-RS application accepts
 
 == Creating the JDBC resource
 
-Create the JDBC resource class in the `src/main/java/io/openliberty/guides/rest/TestResource.java` file:
+Next, create the JDBC resource class in the `src/main/java/io/openliberty/guides/rest/TestResource.java` file:
 [source,java]
 ----
 include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=**;!comment]
@@ -168,6 +165,21 @@ The method body does the following actions:
 . If any part of the statment did not work, then it will go to the Exception and put it on the JsonArray
 
 Once you are done with it. You need to invoke Maven to clean and install the package. 
+
+=== Builing and running the application:
+To build the application, run Maven clean and install on your `start` directory. It should have a `pom.xml` file in it:
+`mvn clean install`
+
+Next, run the Maven goal:
+
+`mvn liberty:run-server`
+
+This goal starts an Open Liberty instance from your `pom.xml` file. 
+
+You can see if it works by invoking:
+http://localhost:9080/Liberty/api/test
+
+Press `Ctrl+C` on the terminal to exit the console of OpenLiberty. 
 
 == Great work! You're done!
 
