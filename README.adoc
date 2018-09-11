@@ -52,7 +52,7 @@ include::{common-includes}/gitclone.adoc[]
 == Prerequisites
 
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
-For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/. Unless (you know how to connect to a MySQL database, please install the MySQL workbench too).
+For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/. (Unless you know how to connect to a MySQL database, please install the MySQL workbench too).
 
 Go through the mySQL setup for the server. Please use the legacy encryption for the password, as it is less of a hassle.
 
@@ -63,12 +63,12 @@ export PATH=$PATH:/Applications/MySQLWorkbench.app/Contents/MacOS
 
 **NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard making new users for the mysql database.
 
-Now, we are going to make a new testuser and a new password for this instance. 
+Now, testuser and a new password to connect with the mysql server. 
 Sign on as root:
 ----
 myuser@mycomputer:~$ mysql -u root -p
 ----
-The -u tells mysql that you want to use the user root and the -p flag means that the password will provided in the next prompt.
+The `-u` tells mysql that you want to use the user root and the `-p` flag means that the password will provided in the next prompt.
 
 Now the testuser needs to be installed into the mysql server. We will make a new testuser named `mytestuser` and the password `mypassword`:
 ----
@@ -77,13 +77,13 @@ mysql> GRANT ALL PRIVILEGES ON * . * TO 'mytestuser'@'localhost';
 mysql> EXIT
 ----
 
-For now, the database that will be used is the employee. The employee database can be installed here: https://github.com/datacharmer/test_db. Download the repo, and import the db data into the mysql database. 
+For now, a sample database given by the MySQL will be used called the Employees. The Employees database can be installed here: https://github.com/datacharmer/test_db. Download the repo, and import the db data into the mysql database. 
 ----
 myuser@mycomputer:~$ git clone https://github.com/datacharmer/test_db
 myuser@mycomputer:~$ cd test_db
 myuser@mycomputer:~$ mysql -u mytestuser -p < employees.sql
 ----
-The last line will prompt for a password which is `mypassword` that we just made. 
+The last line will prompt for a password which is `mypassword`. 
 
 == Creating a JAX-RS application
 
@@ -116,19 +116,10 @@ The `@Path` annotation on the class indicates that this resource responds to the
 in the JAX-RS application. The `@ApplicationPath` annotation in the application class together with
 the `@Path` annotation in this class indicates that the resource is available at the `api/test`
 path.
-[source,java,role="no_copy"]
-----
-include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=class]
-----
 
 JAX-RS maps the HTTP methods on the URL to the methods on the class. The method to call is determined
 by the annotations specified on the methods. In the application you are building, an HTTP `GET` request
 to the `api/test` path results in the system properties being returned:
-
-[source,java,indent=0,role="no_copy"]
-----
-include::finish/src/main/java/io/openliberty/guides/rest/TestResource.java[tags=getProperties]
-----
 
 The `@GET` annotation on the method indicates that this method is to be called for the HTTP `GET`
 method. The `@Produces` annotation indicates the format of the content that will be returned, the
@@ -147,117 +138,6 @@ The method body does the following actions:
 . If there are results from the database, a JsonObject will be created and then be added to the JsonObjectArray.
 . The JsonObject is then built and returned. 
 . If any part of the statment did not work, then it will go to the Exception and put it on the JsonArray
-
-
-== Testing the service
-
-You could test this service manually by starting a server and pointing a web browser at the
-`\http://localhost:9080/Liberty/rest/test` URL. Automated tests are a much better
-approach because they will trigger a failure if a change introduces a bug. JUnit and the JAX-RS Client
-API provide a very simple environment to test the application.
-
-You can write tests for the individual units of code outside of a running application server, or they
-can be written to call the application server directly. In this example, you will create a test that
-does the latter.
-
-Create the test class in the `src/test/java/it/io/openliberty/guides/rest/EndpointTest.java` file:
-
-[source,java]
-----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=**;!comment]
-----
-
-This test class has more lines of code than the resource implementation. This situation is common.
-The test method is indicated with the `@Test` annotation.
-
-The test code needs to know some information about the application in order to make requests. The server
-port and the application context root are key, and are dictated by the server configuration. While this
-information can be hardcoded, it is better to specify it in a single place like the Maven `pom.xml`
-file. Open the `pom.xml` file to see how the application information is provided in the file:
-
-[source,xml,indent=0,role="no_copy"]
-----
-include::finish/pom.xml[tag=appdetails]
-----
-
-These Maven properties are then passed to the Java test program as a series of system properties in
-the `pom.xml` file:
-
-[source,xml,indent=0,role="no_copy"]
-----
-include::finish/pom.xml[tag=testsysprops]
-----
-
-Getting the values to create a representation of the URL is simple. The test class uses the properties
-to get the application details:
-
-[source,java,indent=0,role="no_copy"]
-----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=systemProperties]
-----
-
-The JAX-RS client can be used to make the REST call and convert the payload to and from a JSON-P
-representation. To get the JAX-RS client to do the conversion, the client needs to have the `JsrJsonpProvider`
-class registered with it by calling the `register` method and providing the `Class` object for the
-`JsrJsonpProvider` class:
-
-[source,java,indent=0,role="no_copy"]
-----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=clientSetup]
-----
-
-To call the JAX-RS service using the JAX-RS client, you first create a `WebTarget` object by calling
-the `target` method providing the URL. To cause the HTTP request to occur first the `request` method
-on `WebTarget` and then the `get` method on the returned object need to be called. The `get` method
-call is a synchronous call that blocks until a response is received. This call returns a `Response`
-object, which can be interrogated to determine whether the request was successful:
-
-[source,java,indent=0,role="no_copy"]
-----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=request]
-----
-
-The first thing to check is that a `200` response was received. The JUnit `assertEquals` method can
-be used for this. The first parameter is the error message that indicates why the test failed. The
-second parameter is the expected response code, and the third is the actual response code. It is
-important to associate the expected response code with the second parameter and the actual response
-with the third parameter. Otherwise, the error messages from JUnit will claim that the actual response
-is the expected one, which can cause confusion:
-
-[source,java,indent=0,role="no_copy"]
-----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=response]
-----
-
-Check the response body to ensure it returned the right information. Since the client and the server
-are running on the same machine, it is reasonable to expect that the system properties for the local
-and remote JVM would be the same. In this case, an assertion is made that the `os.name` system property
-for both JVMs is the same. You could write additional assertions to check for more values:
-
-[source,java,indent=0,role="no_copy"]
-----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=body]
-----
-
-To rebuild, run the tests, and see that the test passes, run the command: `mvn install`. The Maven
-build takes a little longer than before the test existed, but expect to see the following information
-in the output:
-
-[source,role="no_copy"]
-----
--------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running it.io.openliberty.guides.rest.EndpointTest
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.884 sec - in it.io.openliberty.guides.rest.EndpointTest
-
-Results :
-
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-----
-
-To see whether the tests detect a failure, add an assertion that you know fails, or change the existing
-assertion to a constant value that doesn't match the `os.name` system property.
 
 == Great work! You're done!
 
