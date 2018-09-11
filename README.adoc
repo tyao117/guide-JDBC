@@ -87,7 +87,17 @@ myuser@mycomputer:~$ mysql -u mytestuser -p < employees.sql
 The last line will prompt for a password which is `mypassword`. 
 
 === Installing Maven
+Download Maven at https://maven.apache.org/download.cgi. There are dependencies for Maven so please fullfill those dependencies before you do anything else. 
 
+Download the tar.gz version of the guide and extract the tar.gz.
+
+`tar xzvf apache-maven*`
+
+After extracting the folder. Move it into your `/opt` folder, if you choose to:
+
+`sudo mv apache-maven* /opt`
+
+You should always link the bin of the maven so you can use it into your `.bash_profile`. 
 
 == Creating a JAX-RS application
 
