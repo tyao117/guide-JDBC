@@ -51,7 +51,8 @@ include::{common-includes}/gitclone.adoc[]
 
 == Prerequisites
 
-This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server in the machine. 
+=== Installing and using MySQLß
+This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server and Maven in the machine. 
 For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/. (Unless you know how to connect to a MySQL database, please install the MySQL workbench too).
 
 Go through the mySQL setup for the server. Please use the legacy encryption for the password, as it is less of a hassle.
@@ -84,6 +85,9 @@ myuser@mycomputer:~$ cd test_db
 myuser@mycomputer:~$ mysql -u mytestuser -p < employees.sql
 ----
 The last line will prompt for a password which is `mypassword`. 
+
+=== Installing Maven
+
 
 == Creating a JAX-RS application
 
@@ -138,6 +142,8 @@ The method body does the following actions:
 . If there are results from the database, a JsonObject will be created and then be added to the JsonObjectArray.
 . The JsonObject is then built and returned. 
 . If any part of the statment did not work, then it will go to the Exception and put it on the JsonArray
+
+Once you are done with it. You need to invoke Maven to clean and install the package. 
 
 == Great work! You're done!
 
