@@ -51,7 +51,7 @@ include::{common-includes}/gitclone.adoc[]
 
 == Prerequisites
 
-=== Installing and using MySQLß
+=== Installing and using MySQL
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server and Maven in the machine. 
 For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/. (Unless you know how to connect to a MySQL database, please install the MySQL workbench too).
 
@@ -97,7 +97,21 @@ After extracting the folder. Move it into your `/opt` folder, if you choose to:
 
 `sudo mv apache-maven* /opt`
 
-You should always link the bin of the maven so you can use it into your `.bash_profile`. 
+You should always link the bin of the maven so you can use it in BASH using `.bash_profile`(for MAC). 
+If you put maven into /opt, you will need to export PATH by invoking:
+
+`export PATH=$PATH/opt/apache-maven-3.5.4/bin`(your version number may vary)
+
+If done correctly, invoking `mvn --version` should give an output similar to this: 
+```
+Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-17T13:33:14-05:00)
+Maven home: /opt/apache-maven-3.5.4
+Java version: 1.8.0_181, vendor: Oracle Corporation, runtime: /Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "10.13.6", arch: "x86_64", family: "mac"
+
+```
+
 
 == Creating a JAX-RS application
 
