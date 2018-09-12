@@ -73,9 +73,6 @@ Search if your package manager has a mysql client. For Ubuntu, it is as easy as 
 sudo apt-get install mysql-client
 ```
 
-
-
-
 **NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard making new users for the mysql database.
 
 Now, use `mytestuser` and `mypassword` to connect with the mysql server. 
