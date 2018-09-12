@@ -55,16 +55,30 @@ include::{common-includes}/gitclone.adoc[]
 This guide will be unique as it will require some installation and/or prior knowledge. This guide requires a mySQL server and Maven in the machine. 
 For this guide: please install the mySQL Community Server from this site: https://dev.mysql.com/downloads/. (Unless you know how to connect to a MySQL database, please install the MySQL workbench too).
 
-Go through the mySQL setup for the server. Please use the legacy encryption for the password, as it is less of a hassle.
+Go through the mySQL setup for the server. Please use the legacy password encryption for the password, as it is less of a hassle.
 
-*optional* If you have installed the MySQL workbench, you may need to add an additional path in your BASH. In Mac, it will be similar to this on your `.bash_profile`:
+*optional:* If you have installed the MySQL workbench, you may need to add an additional path in your BASH. In Mac, it will be similar to this on your `.bash_profile`:
+
+Mac:
+
+If you have installed the MySQL workbench, you may need to add an additional path in your BASH. In Mac, it will be similar to this on your `.bash_profile`:
 ```
 export PATH=$PATH:/Applications/MySQLWorkbench.app/Contents/MacOS
 ```
 
+Linux (Ubuntu 16.04):
+
+Search if your package manager has a mysql client. For Ubuntu, it is as easy as writing this on terminal:
+```
+sudo apt-get install mysql-client
+```
+
+
+
+
 **NOTE** If you have not setup mySQL before, make a root password during the setup, or it will be hard making new users for the mysql database.
 
-Now, testuser and a new password to connect with the mysql server. 
+Now, use `mytestuser` and `mypassword` to connect with the mysql server. 
 Sign on as root:
 ----
 myuser@mycomputer:~$ mysql -u root -p
@@ -97,7 +111,7 @@ After extracting the folder. Move it into your `/opt` folder, if you choose to:
 
 `sudo mv apache-maven* /opt`
 
-You should always link the bin of the maven so you can use it in BASH using `.bash_profile`(for MAC). 
+You should always link the bin of the maven so you can use it in BASH using `.bash_profile`(MAC)/ `.bashrc`(Linux). 
 If you put maven into /opt, you will need to export PATH by invoking:
 
 `export PATH=$PATH/opt/apache-maven-3.5.4/bin`(your version number may vary)
